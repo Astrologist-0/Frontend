@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@400;600&display=swap');
+@import "tailwindcss";
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #07070f;
+  color: #e2e8f0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.cinzel { font-family: 'Cinzel', serif; }
+
+/* Cards */
+.card {
+  background: rgba(12,12,24,0.8);
+  border: 1px solid rgba(139,92,246,0.18);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(139,92,246,0.08);
+}
+
+/* Inputs */
+.field {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(139,92,246,0.22);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #e2e8f0;
+  outline: none;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+.field::placeholder { color: rgba(148,163,184,0.35); }
+.field:focus {
+  border-color: rgba(139,92,246,0.6);
+  background: rgba(139,92,246,0.07);
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.12);
+}
+.field::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 18px; border-radius: 10px; font-size: 13px;
+  font-weight: 500; cursor: pointer; transition: all 0.18s;
+  border: none; font-family: 'Inter', sans-serif; white-space: nowrap;
+}
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary { background: linear-gradient(135deg,#7c3aed,#4f46e5); color:#fff; box-shadow: 0 4px 16px rgba(124,58,237,0.3); }
+.btn-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+.btn-ghost { background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.22); }
+.btn-ghost:hover:not(:disabled) { background: rgba(139,92,246,0.18); }
+.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
+.btn-danger { background: rgba(239,68,68,0.1); color: #fca5a5; border: 1px solid rgba(239,68,68,0.25); }
+.btn-danger:hover:not(:disabled) { background: rgba(239,68,68,0.2); }
+.btn-edit { background: rgba(99,102,241,0.1); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
+.btn-edit:hover:not(:disabled) { background: rgba(99,102,241,0.2); }
+
+/* Table */
+.tbl { width: 100%; border-collapse: collapse; min-width: 680px; }
+.tbl th {
+  padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600;
+  color: rgba(148,163,184,0.6); text-transform: uppercase; letter-spacing: 0.08em;
+  border-bottom: 1px solid rgba(255,255,255,0.06); cursor: pointer; user-select: none;
+  white-space: nowrap;
+}
+.tbl th:hover { color: #e2e8f0; }
+.tbl td { padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tbody tr { transition: background 0.15s; }
+.tbl tbody tr:hover { background: rgba(139,92,246,0.05); }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; padding: 3px 10px;
+  border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap;
+}
+.badge-gold { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.22); }
+.badge-purple { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.22); }
+
+/* Avatar */
+.avatar {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.22);
+  font-size: 14px; font-weight: 600; color: #a78bfa;
+}
+
+/* Stat card */
+.stat { padding: 20px 24px; }
+.stat-label { font-size: 11px; color: rgba(148,163,184,0.5); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+.stat-value { font-size: 32px; font-weight: 700; line-height: 1; }
+
+/* Modal overlay */
+.overlay {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center; padding: 16px;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.3); border-radius: 4px; }
+
+/* Label */
+.lbl { display: block; font-size: 11px; font-weight: 600; color: rgba(148,163,184,0.5); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
