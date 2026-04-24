@@ -10,20 +10,23 @@ import YogaView         from './components/YogaView';
 import Remedies         from './components/Remedies';
 import Forecast         from './components/Forecast';
 import ChartBot         from './components/ChartBot';
+import Compatibility    from './components/Compatibility';
 import { useChartStorage } from './hooks/useChartStorage';
 import { Star, RefreshCw, AlertTriangle, Sparkles, CheckCircle } from 'lucide-react';
 
 const DEFAULT = { date: new Date(), lat: 37.56, lon: -122.01, name: '', location: 'Fremont, California' };
+
 const TABS = [
-  { id: 'chart',       label: '✦ Chart' },
-  { id: 'panchanga',   label: 'Pañcāṅga' },
-  { id: 'graha',       label: 'Graha' },
-  { id: 'dasha',       label: 'Daśā' },
-  { id: 'yogas',       label: 'Yogas' },
-  { id: 'forecast',    label: 'Forecast' },
-  { id: 'predictions', label: 'Predictions' },
-  { id: 'remedies',    label: 'Remedies' },
-  { id: 'bot',         label: '✦ Ask Jyotiṣa' },
+  { id: 'chart',         label: '✦ Chart' },
+  { id: 'panchanga',     label: 'Pañcāṅga' },
+  { id: 'graha',         label: 'Graha' },
+  { id: 'dasha',         label: 'Daśā' },
+  { id: 'yogas',         label: 'Yogas' },
+  { id: 'forecast',      label: 'Forecast' },
+  { id: 'predictions',   label: 'Predictions' },
+  { id: 'compatibility', label: '❤️ Match' },
+  { id: 'remedies',      label: 'Remedies' },
+  { id: 'bot',           label: '✦ Ask Jyotiṣa' },
 ];
 
 export default function App() {
@@ -36,6 +39,13 @@ export default function App() {
   const [justSaved, setJustSaved] = useState(false);
 
   const { saveChart, saving, saveError } = useChartStorage();
+
+  useEffect(() => {
+    if (saveError) {
+      const t = setTimeout(() => {}, 5000); // Auto-hide after 5s
+      return () => clearTimeout(t);
+    }
+  }, [saveError]);
 
   const compute = useCallback((inp) => {
     setLoading(true); setError(null);
@@ -166,7 +176,7 @@ export default function App() {
                 {/* Save error */}
                 {saveError && (
                   <div className="text-xs text-red-400 flex items-center gap-1.5 pt-1">
-                    <AlertTriangle size={11} /> {saveError}
+                    <AlertTriangle size={11} /> Auto-save failed (chart still works)
                   </div>
                 )}
               </div>
@@ -215,8 +225,9 @@ export default function App() {
                 {tab === 'graha' && <GrahaTable grahaInfo={chartData.grahaInfo} />}
                 {tab === 'dasha' && <DashaView chartData={chartData} />}
                 {tab === 'yogas' && <YogaView chartData={chartData} />}
-                {tab === 'predictions' && <Predictions chartData={chartData} />}
-                {tab === 'remedies'    && <Remedies chartData={chartData} />}
+                {tab === 'predictions'   && <Predictions chartData={chartData} />}
+                {tab === 'compatibility' && <Compatibility chart1={chartData} />}
+                {tab === 'remedies'      && <Remedies chartData={chartData} />}
                 {tab === 'forecast'    && <Forecast chartData={chartData} />}
                 {tab === 'bot'         && <ChartBot chartData={chartData} />}
               </>
