@@ -58,7 +58,9 @@ export default function App() {
           await saveChart(data, inp);
           setJustSaved(true);
           setTimeout(() => setJustSaved(false), 3000);
-        } catch (_) {}
+        } catch (saveErr) {
+          console.error('Auto-save failed:', saveErr.message);
+        }
       } catch (e) {
         setError(e.message || 'Calculation failed');
       }

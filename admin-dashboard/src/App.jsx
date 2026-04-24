@@ -235,7 +235,14 @@ export default function App() {
                           </div>
                           <div>
                             <div style={{ fontSize:13, fontWeight:600, color:'#f1f5f9' }}>{c.name || <span style={{ color:'rgba(148,163,184,0.35)', fontStyle:'italic' }}>Anonymous</span>}</div>
-                            <div style={{ fontSize:10, color:'rgba(148,163,184,0.3)', fontFamily:'monospace', marginTop:2 }}>{c.customerId.slice(0,8)}…</div>
+                            <div style={{ display:'flex', alignItems:'center', gap:6, marginTop:2 }}>
+                              <span style={{ fontSize:10, color:'rgba(148,163,184,0.3)', fontFamily:'monospace' }}>{c.customerId.slice(0,8)}…</span>
+                              {c.type === 'partner' && (
+                                <span style={{ fontSize:9, fontWeight:700, padding:'1px 6px', borderRadius:10, background:'rgba(236,72,153,0.15)', color:'#f9a8d4', border:'1px solid rgba(236,72,153,0.25)' }}>
+                                  ❤️ Partner{c.linkedTo ? ` of ${c.linkedTo}` : ''}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </td>

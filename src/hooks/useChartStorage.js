@@ -28,16 +28,21 @@ export function useChartStorage() {
         },
       };
 
+      console.log('[saveChart] Sending to:', API);
+      console.log('[saveChart] birthDate:', body.birthDate, 'lat:', body.lat, 'lon:', body.lon);
+
       const res  = await fetch(`${API}/api/charts`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify(body),
       });
       const json = await res.json();
+      console.log('[saveChart] Response:', res.status, json.success ? 'OK' : json.error);
       if (!res.ok) throw new Error(json.error || 'Save failed');
       setSavedId(json.data.customerId);
       return json.data;
     } catch (err) {
+      console.error('[saveChart] Error:', err.message);
       setSaveError(err.message);
       throw err;
     } finally {

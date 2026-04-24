@@ -10,7 +10,7 @@ export default function Compatibility({ chart1 }) {
   const pad = n => String(n).padStart(2,'0');
   const localISO = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
 
-  const [form, setForm] = useState({ name:'', date: localISO, lat:'28.61', lon:'77.20' });
+  const [form, setForm] = useState({ name:'', date: localISO, lat:'28.61', lon:'77.20', location:'' });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -21,11 +21,31 @@ export default function Compatibility({ chart1 }) {
     e.preventDefault();
     if (!chart1) { setError('Please calculate your birth chart first.'); return; }
     setLoading(true); setError(null);
-    setTimeout(() => {
+    setTimeout(async () => {
       try {
         const chart2 = calcChart(new Date(form.date), parseFloat(form.lat), parseFloat(form.lon));
         const report = generateCompatibilityReport(chart1, chart2, chart1.meta?.name || 'You', form.name || 'Partner');
         setResult(report);
+
+        // Save partner to DB
+        const API = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+        fetch(`${API}/api/charts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name:      form.name || 'Partner',
+            location:  form.location || '',
+            lat:       parseFloat(form.lat),
+            lon:       parseFloat(form.lon),
+            birthDate: new Date(form.date).toISOString(),
+            lagnaSign: chart2.lagnaSign,
+            ayanamsa:  chart2.ayanamsa,
+            planets:   chart2.planets,
+            panchanga: chart2.panchanga,
+            type:      'partner',
+            linkedTo:  chart1.meta?.name || '',
+          }),
+        }).catch(() => {});
       } catch (e) { setError(e.message); }
       setLoading(false);
     }, 100);
@@ -55,6 +75,10 @@ export default function Compatibility({ chart1 }) {
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Name</label>
             <input className={inputCls} placeholder="Partner's name" value={form.name} onChange={set('name')} />
+          </div>
+          <div>
+            <label className="text-xs text-gray-500 mb-1 block">Location</label>
+            <input className={inputCls} placeholder="City, Country" value={form.location} onChange={set('location')} />
           </div>
           <div>
             <label className="text-xs text-gray-500 mb-1 block">Birth Date & Time</label>
