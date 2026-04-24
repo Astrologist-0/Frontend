@@ -5,15 +5,25 @@ import Panchanga        from './components/Panchanga';
 import GrahaTable       from './components/GrahaTable';
 import ChartForm        from './components/ChartForm';
 import Predictions      from './components/Predictions';
+import DashaView        from './components/DashaView';
+import YogaView         from './components/YogaView';
+import Remedies         from './components/Remedies';
+import Forecast         from './components/Forecast';
+import ChartBot         from './components/ChartBot';
 import { useChartStorage } from './hooks/useChartStorage';
 import { Star, RefreshCw, AlertTriangle, Sparkles, CheckCircle } from 'lucide-react';
 
 const DEFAULT = { date: new Date(), lat: 37.56, lon: -122.01, name: '', location: 'Fremont, California' };
 const TABS = [
-  { id: 'chart',       label: 'Chart' },
+  { id: 'chart',       label: '✦ Chart' },
   { id: 'panchanga',   label: 'Pañcāṅga' },
   { id: 'graha',       label: 'Graha' },
+  { id: 'dasha',       label: 'Daśā' },
+  { id: 'yogas',       label: 'Yogas' },
+  { id: 'forecast',    label: 'Forecast' },
   { id: 'predictions', label: 'Predictions' },
+  { id: 'remedies',    label: 'Remedies' },
+  { id: 'bot',         label: '✦ Ask Jyotiṣa' },
 ];
 
 export default function App() {
@@ -203,7 +213,12 @@ export default function App() {
                     coords={{ lat: chartData.meta?.lat, lon: chartData.meta?.lon }} />
                 )}
                 {tab === 'graha' && <GrahaTable grahaInfo={chartData.grahaInfo} />}
+                {tab === 'dasha' && <DashaView chartData={chartData} />}
+                {tab === 'yogas' && <YogaView chartData={chartData} />}
                 {tab === 'predictions' && <Predictions chartData={chartData} />}
+                {tab === 'remedies'    && <Remedies chartData={chartData} />}
+                {tab === 'forecast'    && <Forecast chartData={chartData} />}
+                {tab === 'bot'         && <ChartBot chartData={chartData} />}
               </>
             )}
           </div>
