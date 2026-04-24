@@ -17,16 +17,16 @@ import { Star, RefreshCw, AlertTriangle, Sparkles, CheckCircle, ChevronDown, Che
 const DEFAULT = { date: new Date(), lat: 37.56, lon: -122.01, name: '', location: 'Fremont, California' };
 
 const TABS = [
-  { id: 'chart',         label: 'Chart',        short: '✦' },
-  { id: 'panchanga',     label: 'Pañcāṅga',     short: '📅' },
-  { id: 'graha',         label: 'Graha',         short: '🪐' },
-  { id: 'dasha',         label: 'Daśā',          short: '⏳' },
-  { id: 'yogas',         label: 'Yogas',         short: '🔮' },
-  { id: 'forecast',      label: 'Forecast',      short: '🌤' },
-  { id: 'predictions',   label: 'Predictions',   short: '🌟' },
-  { id: 'compatibility', label: 'Match',         short: '❤️' },
-  { id: 'remedies',      label: 'Remedies',      short: '💎' },
-  { id: 'bot',           label: 'Ask Jyotiṣa',   short: '🤖' },
+  { id: 'chart',         label: 'Chart',       short: '✦'  },
+  { id: 'panchanga',     label: 'Pañcāṅga',    short: '📅' },
+  { id: 'graha',         label: 'Graha',        short: '🪐' },
+  { id: 'dasha',         label: 'Daśā',         short: '⏳' },
+  { id: 'yogas',         label: 'Yogas',        short: '🔮' },
+  { id: 'forecast',      label: 'Forecast',     short: '🌤' },
+  { id: 'predictions',   label: 'Predictions',  short: '🌟' },
+  { id: 'compatibility', label: 'Match',        short: '❤️' },
+  { id: 'remedies',      label: 'Remedies',     short: '💎' },
+  { id: 'bot',           label: 'Ask Jyotiṣa',  short: '🤖' },
 ];
 
 export default function App() {
@@ -37,9 +37,9 @@ export default function App() {
   const [tab,       setTab]       = useState('chart');
   const [now,       setNow]       = useState(new Date());
   const [justSaved, setJustSaved] = useState(false);
-  const [formOpen,  setFormOpen]  = useState(true); // collapsible on mobile
+  const [formOpen,  setFormOpen]  = useState(true);
 
-hart, saveError } = useChartStorage();
+  const { saveChart, saveError } = useChartStorage();
 
   const compute = useCallback((inp) => {
     setLoading(true); setError(null);
@@ -57,25 +57,24 @@ hart, saveError } = useChartStorage();
     }, 80);
   }, [saveChart]);
 
-  useEffect(() => {T); }, []);
+  useEffect(() => { compute(DEFAULT); }, []);
   useEffect(() => {
-    const t = setInterval(() => seate()), 1000);
+    const t = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(t);
-}, []);
+  }, []);
 
   const handleSubmit = (inp) => { setInput(inp); compute(inp); };
-(n); compute(n); };
+  const handleNow    = () => { const n = { ...input, date: new Date() }; setInput(n); compute(n); };
 
   return (
-    <div className="min-h-screen" style={{ background: 'radial-gradient(ellipse 80% 60% at 10% -10%, #%, #07070f 55%)' }}>
+    <div className="min-h-screen" style={{ background: 'radial-gradient(ellipse 80% 60% at 10% -10%, #1a0a2e 0%, #07070f 55%)' }}>
 
-      {/* Ambient */}
       <div aria-hidden className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-32 left-1/3 w-[500px] h-[500px] rounded-full opacity-[0.07]"
           style={{ background: 'radial-gradient(circle,#7c3aed,transparent 65%)', filter: 'blur(80px)' }} />
       </div>
 
-      {/* ── Header ── */}
+      {/* Header */}
       <header className="sticky top-0 z-40 border-b border-white/[0.06]"
         style={{ background: 'rgba(7,7,15,0.92)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)' }}>
         <div className="max-w-screen-xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
@@ -109,61 +108,70 @@ hart, saveError } = useChartStorage();
         </div>
       </header>
 
-      {/* ── Page body ── */}
+      {/* Body */}
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="grid grid-cols-1 xl:grid-cols-[340px_1fr] gap-5 xl:gap-6 items-start">
 
-          {/* ── LEFT: Chart Details — always visible ── */}
+          {/* Left panel — always visible */}
           <div className="space-y-4">
 
-            {/* Form card with collapsible header on mobile */}
+            {/* Chart Details card */}
             <div className="glass-dark glow-purple overflow-hidden">
-              {/* Card header — clickable on mobile to collapse */}
               <button
-                className="w-full flex items-center justify-between px-5 py-4 xl:cursor-default"
-                onClick={() => window.innerWidth < 1280 && setFormOpen(v => !v)}
+                className="w-full flex items-center justify-between px-5 py-4"
+                onClick={() => setFormOpen(v => !v)}
               >
                 <div className="flex items-center gap-2">
                   <Sparkles size={13} className="text-purple-400" />
                   <span className="font-cinzel text-sm font-semibold text-purple-200 tracking-wide">Chart Details</span>
                 </div>
-                <span className="xl:hidden text-gray-500">
+                <span className="text-gray-500">
                   {formOpen ? <ChevronUp size={15}/> : <ChevronDown size={15}/>}
                 </span>
               </button>
-
-              {/* Form body */}
-              <div className={`px-5 pb-5 ${formOpen ? 'block' : 'hidden'} xl:block`}>
-                <ChartForm onSubmit={handleSubmit} loading={loading} />
-                  <span className="text-[10px] font-mono text-purple-400/70">{chartData.ayanamsa?.toFixed(3)}° Lahiri</span>
+              {formOpen && (
+                <div className="px-5 pb-5">
+                  <ChartForm onSubmit={handleSubmit} loading={loading} />
+                </div>
+              )}
             </div>
 
-            {/* Chart info card */}
+            {/* Chart Info card */}
             {chartData && (
               <div className="glass-dark p-4 space-y-3">
-                    { label:'Lagna',    value: chartData.RASHIS?.[chartData.lagnaSign] },
-                    { label:'Tithi',    value: chartData.panchanga?.tithi?.display },
-                    { label:'Nakṣatra', value: chartData.panchanga?.nakshatra?.name },
-                    { label:'Yoga',     value: chartData.panchanga?.yoga?.name },
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-gray-500 uppercase tracking-widest font-medium">Chart Info</span>
+                  <span className="text-[10px] font-mono text-purple-400/70">{chartData.ayanamsa?.toFixed(3)}° Lahiri</span>
+                </div>
                 {chartData.meta?.name && <div className="text-sm font-semibold text-white">{chartData.meta.name}</div>}
                 {chartData.meta?.location && <div className="text-xs text-gray-400 leading-relaxed">{chartData.meta.location}</div>}
                 <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-2 gap-2 pt-1">
                   {[
-                    { label:'Lagna',    value: chartData.RASHIS?.[chartData.lagnaSign] },
-                    { label:'Tithi',    value: chartData.panchanga?.tithi?.display },
-                    { label:'Nakṣatra', value: chartData.panchanga?.nakshatra?.name },
-                    { label:'Yoga',     value: chartData.panchanga?.yoga?.name },
+                    { label: 'Lagna',    value: chartData.RASHIS?.[chartData.lagnaSign] },
+                    { label: 'Tithi',    value: chartData.panchanga?.tithi?.display },
+                    { label: 'Nakṣatra', value: chartData.panchanga?.nakshatra?.name },
+                    { label: 'Yoga',     value: chartData.panchanga?.yoga?.name },
                   ].map(({ label, value }) => (
                     <div key={label} className="rounded-xl p-3"
                       style={{ background:'rgba(139,92,246,0.07)', border:'1px solid rgba(139,92,246,0.14)' }}>
-              <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">{label}</div>
+                      <div className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">{label}</div>
                       <div className="text-xs font-semibold text-purple-200 sanskrit leading-snug truncate">{value || '—'}</div>
                     </div>
                   ))}
                 </div>
                 {saveError && (
                   <div className="text-xs text-amber-400/70 flex items-center gap-1.5 pt-1">
-            {/* Tab bar — scrollable on mobile, full width on desktop */}
+                    <AlertTriangle size={10}/> Auto-save failed
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Right panel */}
+          <div className="min-w-0 space-y-3">
+
+            {/* Tab bar */}
             <div className="overflow-x-auto pb-1 -mx-1 px-1">
               <div className="flex gap-1 p-1 rounded-xl w-max xl:w-full"
                 style={{ background:'rgba(255,255,255,0.025)', border:'1px solid rgba(139,92,246,0.14)' }}>
@@ -176,55 +184,44 @@ hart, saveError } = useChartStorage();
                       border: tab === t.id ? '1px solid rgba(139,92,246,0.4)' : 'none',
                       boxShadow: tab === t.id ? '0 2px 12px rgba(124,58,237,0.25)' : 'none',
                     }}>
-                    {/* Emoji on small, text on md+ */}
                     <span className="md:hidden text-base leading-none">{t.short}</span>
                     <span className="hidden md:inline">{t.label}</span>
                   </button>
                 ))}
               </div>
-            </div>  style={{
-                      bac),rgba(79,70,229,0.55))' : 'transparent',
-                      color: tab === t.id ? '#fff' : 'rgba(148,163,184,0.65)',
-                      border: tab === t.id ? '1px solid rgba(139,92,246,0.4)' : 'none',
-                      boxShadow: tab === t.id ? '0 2px 12px rgba(124,58,237,0.25)' : 'none',
-                    }}>
-                    {/* Show emoji on small screens, full label on medium+ */}
-                    <span className="md:hidden">{t.short}</span>
-                    <spann md:inline">{t.label}</span>
-                  </button>
-                ))}
-              </div>
             </div>
 
-            {/* Loading */}
             {loading && (
               <div className="glass-dark flex flex-col items-center justify-center py-20 gap-3">
                 <RefreshCw size={20} className="animate-spin text-purple-400" />
-                {tab === "chart" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <BirthChart chartData={chartData} title="Rāśi" />
-                    <BirthChart chartData={chartData} title="Navāṃśa" />
-                  </div>
-                )}ing && error && (
+                <span className="text-xs text-gray-500">Calculating positions…</span>
+              </div>
+            )}
+
+            {!loading && error && (
               <div className="glass-dark flex items-start gap-3 p-4" style={{ borderColor:'rgba(239,68,68,0.3)' }}>
                 <AlertTriangle size={15} className="text-red-400 flex-shrink-0 mt-0.5" />
                 <span className="text-sm text-red-300">{error}</span>
               </div>
             )}
 
-            {/* Tab content */}
             {!loading && !error && chartData && (
               <>
                 {tab === 'chart' && (
-                 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <BirthChart chartData={chartData} title="Rāśi" />
                     <BirthChart chartData={chartData} title="Navāṃśa" />
                   </div>
                 )}
                 {tab === 'panchanga'     && <Panchanga panchanga={chartData.panchanga} date={chartData.meta?.date} coords={{ lat: chartData.meta?.lat, lon: chartData.meta?.lon }} />}
                 {tab === 'graha'         && <GrahaTable grahaInfo={chartData.grahaInfo} />}
- asha'         && <DashaView chartData={chartData} />}
-chartData={chartData} />}
+                {tab === 'dasha'         && <DashaView chartData={chartData} />}
+                {tab === 'yogas'         && <YogaView chartData={chartData} />}
+                {tab === 'forecast'      && <Forecast chartData={chartData} />}
+                {tab === 'predictions'   && <Predictions chartData={chartData} />}
+                {tab === 'compatibility' && <Compatibility chart1={chartData} />}
+                {tab === 'remedies'      && <Remedies chartData={chartData} />}
+                {tab === 'bot'           && <ChartBot chartData={chartData} />}
               </>
             )}
           </div>
@@ -233,9 +230,3 @@ chartData={chartData} />}
     </div>
   );
 }
-                {tab === 'yogas'         && <YogaView chartData={chartData} />}
-                {tab === 'forecast'      && <Forecast chartData={chartData} />}
-                {tab === 'predictions'   && <Predictions chartData={chartData} />}
-                {tab === 'compatibility' && <Compatibility chart1={chartData} />}
-                {tab === 'remedies'      && <Remedies chartData={chartData} />}
-                {tab === 'bot'           && <ChartBot 
