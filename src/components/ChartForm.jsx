@@ -54,6 +54,10 @@ export default function ChartForm({ onSubmit, loading }) {
       alert('Please select a place from the search suggestions to get accurate coordinates.');
       return;
     }
+    if (!form.date) {
+      alert('Please enter your date and time of birth.');
+      return;
+    }
     onSubmit({
       date: new Date(form.date),
       lat: parseFloat(form.lat),
@@ -87,7 +91,6 @@ export default function ChartForm({ onSubmit, loading }) {
           className="input-field"
           value={form.date}
           onChange={e => setForm(f => ({ ...f, date: e.target.value }))}
-          required
         />
       </div>
 

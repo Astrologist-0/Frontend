@@ -14,7 +14,7 @@ import Compatibility    from './components/Compatibility';
 import { useChartStorage } from './hooks/useChartStorage';
 import { Star, RefreshCw, AlertTriangle, Sparkles, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
-const DEFAULT = { date: new Date(), lat: 0, lon: 0, name: '', location: '' };
+const DEFAULT = { date: new Date('1990-01-01T06:00:00'), lat: 28.6139, lon: 77.2090, name: 'Sample Chart', location: 'New Delhi, India' };
 
 const TABS = [
   { id: 'chart',         label: 'Chart',       short: '✦'  },
