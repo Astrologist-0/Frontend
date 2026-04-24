@@ -14,7 +14,7 @@ import Compatibility    from './components/Compatibility';
 import { useChartStorage } from './hooks/useChartStorage';
 import { Star, RefreshCw, AlertTriangle, Sparkles, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
-const DEFAULT = { date: new Date(), lat: 37.56, lon: -122.01, name: '', location: 'Fremont, California' };
+const DEFAULT = { date: new Date(), lat: 0, lon: 0, name: '', location: '' };
 
 const TABS = [
   { id: 'chart',         label: 'Chart',       short: '✦'  },
