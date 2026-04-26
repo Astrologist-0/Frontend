@@ -39,10 +39,33 @@ export default function ChartBot({ chartData }) {
     setMessages(m => [...m, { role: 'user', text: q }]);
     setTyping(true);
 
-    await new Promise(r => setTimeout(r, 400));
+    try {
+      const result = askChartBot(q, chartData);
+      const msgId = Date.now();
 
-    const result = await askChartBot(q, chartData);
-    setMessages(m => [...m, { role: 'bot', text: result.text, followUps: result.followUps, webResults: result.webResults }]);
+      // Wait for Gemini — if it responds, use that. Otherwise fall back to local.
+      const rag = await result.ragPromise;
+
+      const finalText = rag?.answer || result.text;
+      const finalSources = rag?.sources || [];
+
+      setMessages(m => [...m, {
+        role: 'bot',
+        text: finalText,
+        followUps: result.followUps,
+        webResults: finalSources,
+        id: msgId,
+      }]);
+    } catch (e) {
+      console.error('Bot error:', e);
+      setMessages(m => [...m, {
+        role: 'bot',
+        text: 'Sorry, I encountered an error. Please try again.',
+        followUps: [],
+        webResults: [],
+      }]);
+    }
+
     setTyping(false);
   };
 
@@ -139,8 +162,9 @@ export default function ChartBot({ chartData }) {
               style={{ background:'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
               <Bot size={14} className="text-white"/>
             </div>
-            <div className="rounded-2xl px-4 py-3 flex items-center gap-1.5"
+            <div className="rounded-2xl px-4 py-3 flex items-center gap-2"
               style={{ background:'rgba(139,92,246,0.1)', border:'1px solid rgba(139,92,246,0.2)', borderTopLeftRadius:4 }}>
+              <span className="text-xs text-purple-400/70">Jyotiṣa AI is thinking</span>
               {[0,1,2].map(i => (
                 <div key={i} className="w-1.5 h-1.5 rounded-full bg-purple-400"
                   style={{ animation:`bounce 1s ease-in-out ${i*0.15}s infinite` }}/>
