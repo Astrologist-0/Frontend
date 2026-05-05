@@ -25,15 +25,22 @@ const CELLS = [
 
 export default function BirthChart({ chartData, title = 'Rāśi' }) {
   if (!chartData) return null;
-  const { planets, lagnaSign } = chartData;
+
+  const isNavamsa = title.toLowerCase().includes('nav') || title.includes('D9');
+
+  // Use navamsa positions for D9 chart, rasi positions for D1
+  const activePlanets  = isNavamsa ? chartData.navamsaPlanets  : chartData.planets;
+  const activeLagna    = isNavamsa ? chartData.navamsaLagnaSign : chartData.lagnaSign;
 
   // sign → planets
   const bySign = {};
   for (let s = 0; s < 12; s++) bySign[s] = [];
-  for (const [p, lon] of Object.entries(planets)) {
+  for (const [p, lon] of Object.entries(activePlanets || {})) {
     if (p === 'As') continue; // Lagna shown via cell highlight
     bySign[Math.floor(lon / 30)].push({ p, deg: Math.floor(lon % 30) });
   }
+
+  const lagnaSign = activeLagna;
 
   return (
     <div className="glass-dark glow-purple overflow-hidden flex flex-col">
