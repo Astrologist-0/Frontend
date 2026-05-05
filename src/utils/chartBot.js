@@ -35,10 +35,25 @@ function safeSign(lon) {
 }
 
 function buildCtx(chartData) {
-  const { planets, lagnaSign, panchanga } = chartData;
+  const { planets, lagnaSign, panchanga, meta } = chartData;
   const lagna = RASHI_NAMES[lagnaSign] || 'Unknown';
 
+  // Format birth details for Gemini context
+  let birthDate = 'Unknown', birthTime = 'Unknown', birthPlace = 'Unknown';
+  if (meta?.date) {
+    const d = new Date(meta.date);
+    birthDate = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+    birthTime = d.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+  }
+  if (meta?.location) birthPlace = meta.location;
+
   return {
+    // Birth details — passed to Gemini for richer context
+    birthDate,
+    birthTime,
+    birthPlace,
+    name: meta?.name || '',
+
     lagna,
     lagnaTraits: SIGN_TRAITS[lagnaSign] || 'unique',
     sunSign:     safeSign(planets.Su),
@@ -58,6 +73,9 @@ function buildCtx(chartData) {
     rahuHouse:   getHouse('Ra', planets, lagnaSign),
     ketuHouse:   getHouse('Ke', planets, lagnaSign),
     nakshatra:   panchanga?.nakshatra?.name || 'Unknown',
+    tithi:       panchanga?.tithi?.display || 'Unknown',
+    yoga:        panchanga?.yoga?.name || 'Unknown',
+    vara:        panchanga?.vara?.name || 'Unknown',
     h7Sign:      RASHI_NAMES[(lagnaSign + 6) % 12] || 'Unknown',
     lagnaSign,
   };
@@ -164,7 +182,9 @@ async function fetchRAGAnswer(question, ctx) {
     clearTimeout(timeout);
     if (!res.ok) return null;
     const data = await res.json();
-    return data.success ? { answer: data.answer, sources: data.sources } : null;
+    return data.success
+      ? { answer: data.answer, followUps: data.followUps || [], sources: data.sources }
+      : null;
   } catch { return null; }
 }
 

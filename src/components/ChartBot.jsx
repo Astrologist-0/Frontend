@@ -46,13 +46,15 @@ export default function ChartBot({ chartData }) {
       // Wait for Gemini — if it responds, use that. Otherwise fall back to local.
       const rag = await result.ragPromise;
 
-      const finalText = rag?.answer || result.text;
-      const finalSources = rag?.sources || [];
+      const finalText    = rag?.answer    || result.text;
+      const finalSources = rag?.sources   || [];
+      // Use Gemini's follow-ups if available, otherwise fall back to local topic-based ones
+      const finalFollowUps = (rag?.followUps?.length > 0) ? rag.followUps : result.followUps;
 
       setMessages(m => [...m, {
         role: 'bot',
         text: finalText,
-        followUps: result.followUps,
+        followUps: finalFollowUps,
         webResults: finalSources,
         id: msgId,
       }]);
